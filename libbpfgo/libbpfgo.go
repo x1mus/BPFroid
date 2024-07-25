@@ -1,7 +1,7 @@
 package libbpfgo
 
 /*
-#cgo LDFLAGS: -lelf -lz
+#cgo LDFLAGS: -lelf -lz -L/usr/lib/ -lzstd
 
 #include <bpf/bpf.h>
 #include <bpf/libbpf.h>
@@ -52,7 +52,7 @@ int poke_kprobe_events(bool add, const char* name, bool ret) {
     int fd, err;
     char pr;
 
-    fd = open("/sys/kernel/debug/tracing/kprobe_events", O_WRONLY | O_APPEND, 0);
+    fd = open("/sys/kernel/tracing/kprobe_events", O_WRONLY | O_APPEND, 0);
     if (fd < 0) {
         err = -errno;
         fprintf(stderr, "failed to open kprobe_events file: %d\n", err);
@@ -110,7 +110,7 @@ struct bpf_link* attach_kprobe_legacy(
     snprintf(
         fname,
         sizeof(fname),
-        "/sys/kernel/debug/tracing/events/kprobes/%c%s/id",
+        "/sys/kernel/tracing/events/kprobes/%c%s/id",
         pr, func_name);
     f = fopen(fname, "r");
     if (!f) {
@@ -166,7 +166,7 @@ int poke_uprobe_events(bool add, const char* name, const char* path, unsigned lo
     int fd, err;
     char pr;
 
-    fd = open("/sys/kernel/debug/tracing/uprobe_events", O_WRONLY | O_APPEND, 0);
+    fd = open("/sys/kernel/tracing/uprobe_events", O_WRONLY | O_APPEND, 0);
     if (fd < 0) {
         err = -errno;
         fprintf(stderr, "failed to open uprobe_events file: %d\n", err);
@@ -226,7 +226,7 @@ struct bpf_link* attach_uprobe_legacy(
     snprintf(
         fname,
         sizeof(fname),
-        "/sys/kernel/debug/tracing/events/uprobes/%c%s/id",
+        "/sys/kernel/tracing/events/uprobes/%c%s/id",
         pr, func_name);
     f = fopen(fname, "r");
     if (!f) {

@@ -1,4 +1,4 @@
-FROM arm64v8/golang:alpine
+FROM arm64v8/golang:1.18.2-alpine
 RUN apk update
-RUN apk add clang llvm git vim make gcc wget libc6-compat coreutils elfutils-dev linux-headers musl-dev libelf-static zlib-static
+RUN apk add clang llvm git vim make gcc wget libc6-compat coreutils elfutils-dev linux-headers musl-dev libelf-static zlib-static zstd-static
 WORKDIR /
