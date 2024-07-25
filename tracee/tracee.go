@@ -927,7 +927,7 @@ func (t *Tracee) setUprobe(hook hookDescriptor) error {
 		}
 		_, err = prog.AttachUretprobeLegacy(hook.Method, hook.Filename, hook.Offset)
 		if err != nil {
-			return fmt.Errorf("error attaching uprobe %s: %v", hook.Method, err)
+			return fmt.Errorf("error attaching uretprobe %s: %v", hook.Method, err)
 		}
 	}
 	return nil
