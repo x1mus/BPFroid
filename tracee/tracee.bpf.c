@@ -1743,6 +1743,7 @@ int api_uprobe_ent_generic(struct pt_regs *ctx)
     return 0;
 }
 
+/* OLD UPROBE DEF
 SEC("uprobe/func_uprobe_ent")
 int func_trace_ent_generic(struct pt_regs *ctx)
 {
@@ -1755,6 +1756,45 @@ int func_trace_ent_generic(struct pt_regs *ctx)
 
     u64 id = bpf_get_current_pid_tgid();
     bpf_map_update_elem(&uprobe_off_map, &id, &uprobe_off, BPF_ANY);
+    return 0;
+}
+*/
+// NEW UPROBE DEF
+SEC("uprobe/func_uprobe_ent")
+int func_trace_ent_generic(struct pt_regs *ctx)
+{
+    if (!should_trace())
+        return 0;
+
+    save_args_from_regs(ctx, GENERIC_UPROBE, false);
+    u64 uprobe_off = PT_REGS_IP(ctx);
+    //bpf_trace_printk("%llx\n", uprobe_off);
+
+    u64 id = bpf_get_current_pid_tgid();
+    bpf_map_update_elem(&uprobe_off_map, &id, &uprobe_off, BPF_ANY);
+
+    u64 *types_p = bpf_map_lookup_elem(&types_map, &uprobe_off);
+    if (types_p == NULL)
+        return 0;
+    u64 types = *types_p;
+
+    args_t args = {};
+    bool delete_args = false; // Don't delete args on entry
+    if (load_args(&args, delete_args, GENERIC_UPROBE) != 0)
+        return 0;
+
+    buf_t *submit_p = get_buf(SUBMIT_BUF_IDX);
+    if (submit_p == NULL)
+        return 0;
+    set_buf_off(SUBMIT_BUF_IDX, sizeof(context_t));
+
+    // Save uprobe_off so userspace can know which uprobe was called
+    save_to_submit_buf(submit_p, &uprobe_off, sizeof(unsigned long), ULONG_T, 0);
+    u8 argnum = save_args_to_submit_buf(types, types, &args) + 1;
+    init_and_save_context(ctx, submit_p, GENERIC_UPROBE, argnum, -999); // -999==> SPECIFY THAT IT WAS A CALL
+
+    events_perf_submit(ctx);
+
     return 0;
 }
 
