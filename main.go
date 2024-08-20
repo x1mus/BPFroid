@@ -208,6 +208,13 @@ Examples:
 
 Use this flag multiple times to choose multiple capture options	
 `
+	validFormats := map[string]bool{
+		"table":        true,
+		"table-verbose": true,
+		"json":         true,
+		"gob":          true,
+		"gotemplate":		true,
+	}
 
 	res := tracee.OutputConfig{}
 	if len(outputSlice) == 1 && outputSlice[0] == "help" {
@@ -222,7 +229,11 @@ Use this flag multiple times to choose multiple capture options
 			outputParts[0] = "format"
 		}
 		if outputParts[0] == "format" {
-			res.Format = outputParts[1]
+			if (len(outputParts[1]) >= 10 && validFormats[outputParts[1][:10]]) || validFormats[outputParts[1]] {
+				res.Format = outputParts[1]
+			} else {
+				return res, fmt.Errorf("invalid format: %s, use '--output help' for more info", outputParts[1])
+			}
 		} else if outputParts[0] == "out-file" {
 			res.OutPath = outputParts[1]
 		} else if outputParts[0] == "err-file" {

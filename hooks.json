@@ -266,6 +266,12 @@
                 "type": "generic"
             },
             {
+                "class_name": "android.content.Context",
+                "method": "getPackageCodePath",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
                 "class_name": "android.content.pm.ApplicationInfo",
                 "method": "getApplicationInfo",
                 "thisObject": true,
@@ -300,6 +306,54 @@
                 "method": "getString",
                 "thisObject": false,
                 "type": "detection"
+            },
+            {
+                "class_name": "java.security.KeyPairGenerator",
+                "method": "getInstance",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "java.security.Security",
+                "method": "getProvider",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "android.security.keystore.KeyGenParameterSpec",
+                "method": "Builder",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "java.security.cert.X509Certificate",
+                "method": "getExtensionValue",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "org.bouncycastle.asn1.ASN1InputStream",
+                "method": null,
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "org.bouncycastle.asn1.ASN1InputStream",
+                "method": "readObject",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "java.security.cert.X509Certificate",
+                "method": "verify",
+                "thisObject": false,
+                "type": "generic"
+            },
+            {
+                "class_name": "java.security.KeyStore",
+                "method": "getCertificateChain",
+                "thisObject": false,
+                "type": "generic"
             }
         ],
         "uprobes": [
@@ -398,6 +452,12 @@
                 "sym_name": "__system_property_get",
                 "offset": "",
                 "args_types": [ "char*", "char*" ]
+            },
+            {
+                "lib_path": "/apex/com.android.runtime/lib64/bionic/libc.so",
+                "sym_name": "ptrace",
+                "offset": "",
+                "args_types": [ "enum __ptrace_request", "pid_t", "void*", "void*" ]
             }
         ],
         "syscalls": [
